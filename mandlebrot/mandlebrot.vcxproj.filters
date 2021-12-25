@@ -48,9 +48,13 @@
     <ClCompile Include="src\vendor\ImGUI\imgui_impl_opengl3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\vendor\ImGUI\imgui_color_gradient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="mb.shader" />
+    <None Include="mandlebrot.shader" />
+    <None Include="mandlebulb.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h">
@@ -87,6 +91,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\vendor\ImGUI\imgui_impl_opengl3_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vendor\ImGUI\imgui_color_gradient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -30,6 +30,7 @@ public:
 	void SetV4DUniforms(const std::string& name, double x, double y, double z, double w);
 	void SetV2Uniforms(const std::string& name, float x, float y);
 	void SetV4Uniforms(const std::string& name, float x, float y, float z, float w);
+	void SetV3Uniforms(const std::string& name, float x, float y, float z);
 	void SetMat4Uniforms(const std::string& name, glm::mat4& matrix);
 	void SetIntUniforms(const std::string& name, int i);
 	void SetFloatUniforms(const std::string& name, float i);

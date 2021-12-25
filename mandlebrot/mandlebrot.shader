@@ -20,7 +20,16 @@ uniform dvec4 _bounds;
 uniform int iterations;
 uniform int type;
 uniform vec2 juliaCoords;
-uniform vec4 col1, col2, col3, col4;
+
+struct gradientPos {
+	vec4 color;
+	float position;
+};
+
+uniform gradientPos gradient[50];
+uniform int gradientNum;
+
+uniform vec4 inside_color;
 
 in vec2 coords;
 
@@ -85,6 +94,34 @@ int iterator(double x, double y, int t) {
 		return iteration;
 }
 
+vec4 getGradient(float pos) {
+	int lower = 0, upper = gradientNum-1;
+
+	for (int i = 0; i < gradientNum; i++) {
+		if (gradient[i].position < pos)
+		{
+			if (gradient[lower].position < gradient[i].position)
+			{
+				lower = i;
+			}
+		}
+
+		if (gradient[i].position >= pos)
+		{
+			if (gradient[upper].position > gradient[i].position)
+			{
+				upper = i;
+			}
+		}
+	}
+
+	if (upper == lower)
+		return gradient[upper].color;
+	
+	return mix(gradient[lower].color, gradient[upper].color, 
+		(pos - gradient[lower].position) / (gradient[upper].position - gradient[lower].position));
+}
+
 void main() {
 	dvec2 pos = dvec2(
 		(coords.x * _bounds.z * _bounds.w) + _bounds.x,
@@ -92,8 +129,5 @@ void main() {
 	);
 	int it = iterator(pos.x, pos.y, type);
 	float ivalue = it / float(iterations);
-	if (it == -1) { FragColor = col4; return; }
-	vec4 mix1 = mix(col1, col2, ivalue);
-	vec4 mix2 = mix(col2, col3, ivalue);
-	FragColor = mix(mix1, mix2, ivalue);
+	FragColor = (it == -1) ? inside_color : getGradient(log2(ivalue + 1));
 };

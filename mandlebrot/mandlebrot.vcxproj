@@ -155,6 +155,7 @@
     <ClCompile Include="src\Gui.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\vendor\ImGUI\imgui.cpp" />
+    <ClCompile Include="src\vendor\ImGUI\imgui_color_gradient.cpp" />
     <ClCompile Include="src\vendor\ImGUI\imgui_demo.cpp" />
     <ClCompile Include="src\vendor\ImGUI\imgui_draw.cpp" />
     <ClCompile Include="src\vendor\ImGUI\imgui_impl_glfw.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\vendor\ImGUI\imconfig.h" />
     <ClInclude Include="src\vendor\ImGUI\imgui.h" />
+    <ClInclude Include="src\vendor\ImGUI\imgui_color_gradient.h" />
     <ClInclude Include="src\vendor\ImGUI\imgui_impl_glfw.h" />
     <ClInclude Include="src\vendor\ImGUI\imgui_impl_opengl3.h" />
     <ClInclude Include="src\vendor\ImGUI\imgui_impl_opengl3_loader.h" />
