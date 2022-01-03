@@ -34,12 +34,19 @@ out vec4 FragColor;
 
 const float MAXDIST = 30.0f;
 
+uniform vec3 col1, col2;
 uniform int iterations = 300;
 uniform int MaximumRaySteps = 400;
 uniform float minRadius2 = 1;
 uniform float fixedRadius2 = 4;
 uniform float foldingLimit = 1;
 uniform float Scale = -1.5;
+uniform float Power = 8;
+uniform bool shadows;
+
+uniform vec3 sun_pos;
+
+uniform int type;
 
 in vec3 origin, direction;
 
@@ -83,8 +90,6 @@ float DistanceEstimatorBulb(vec3 pos) {
 	float dr = 1.0;
 	float r = 0.0;
 
-	float Power = 8;
-
 	for (int i = 0; i < iterations; i++) {
 		r = length(z);
 		if (r > 2) break;
@@ -108,6 +113,7 @@ struct marchReturn {
 	int steps;
 	float steps_normalized;
 	float closest_distance;
+	float total_dist;
 	vec3 endpoint;
 };
 
@@ -116,34 +122,51 @@ marchReturn trace(vec3 from, vec3 direction, float MinimumDistance) {
 	int steps = 0;
 	float closestDist = 100;
 	vec3 p;
+	
+	if (type == 0) {
+		for (; steps < MaximumRaySteps; steps++) {
+			p = from + totalDistance * direction;
 
-	for (; steps < MaximumRaySteps; steps++) {
-		p = from + totalDistance * direction;
-		
-		float distance = DistanceEstimatorBulb(p);
-		closestDist = distance < closestDist ? distance : closestDist;
-		totalDistance += distance;
+			float distance = DistanceEstimatorBulb(p);
+			closestDist = distance < closestDist ? distance : closestDist;
+			totalDistance += distance;
 
-		if (totalDistance > MAXDIST) 
-			return marchReturn(false, steps, 1, closestDist, p);
-		if (distance < MinimumDistance) 
-			return marchReturn(true, steps, float(steps) / MaximumRaySteps, 0.0, p);
+			if (totalDistance > MAXDIST)
+				return marchReturn(false, steps, 1, closestDist, totalDistance, p);
+			if (distance < MinimumDistance)
+				return marchReturn(true, steps, float(steps) / MaximumRaySteps, 0.0, totalDistance, p);
+		}
 	}
-	return marchReturn(false, steps, 1, closestDist, p);
+	else {
+		for (; steps < MaximumRaySteps; steps++) {
+			p = from + totalDistance * direction;
+
+			float distance = DistanceEstimatorCube(p);
+			closestDist = distance < closestDist ? distance : closestDist;
+			totalDistance += distance;
+
+			if (totalDistance > MAXDIST)
+				return marchReturn(false, steps, 1, closestDist, totalDistance, p);
+			if (distance < MinimumDistance)
+				return marchReturn(true, steps, float(steps) / MaximumRaySteps, 0.0, totalDistance, p);
+		}
+	}
+	
+	return marchReturn(false, steps, 1, closestDist, totalDistance, p);
 }
 
 void main() {
 	marchReturn marched = trace(origin, direction, 0.001f);
 	
-	vec3 color = vec3(0, 1, 0) * (1 - marched.steps_normalized);
+	vec3 color = col1 * (1 - marched.steps_normalized);
 	
 	float dnorm = (marched.closest_distance * 10);
 	float haloAmount = ((marched.closest_distance < 1) ? (1 - marched.closest_distance) : 0);
-	vec3 halo = mix(vec3(0, 0, 0), vec3(0.25, 0.5, 1.0), haloAmount);
+	vec3 halo = mix(vec3(0, 0, 0), col2, haloAmount);
 	
-	vec3 finalcolor = marched.hit ? color : halo;
+	vec3 finalcolor = marched.hit ? mix(color, halo, 0.1f * marched.total_dist) : halo;
 
-	finalcolor *= trace(marched.endpoint + vec3(0.001f, 0.001f, 0.001f), normalize(vec3(1, 1, 1)), 0.001f).hit ? 0.25f : 1.0f;
+	if(shadows) finalcolor *= trace(marched.endpoint + sun_pos * 0.01f, sun_pos, 0.001f).hit ? 0.4f : 1.0f;
 	
 	FragColor = vec4(finalcolor, 1.0f);
 };

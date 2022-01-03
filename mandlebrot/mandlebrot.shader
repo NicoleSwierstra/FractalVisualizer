@@ -45,7 +45,7 @@ dvec2 step_tricorn(dvec2 v, double x, double y) {
 	return dvec2((v.x * v.x - v.y * v.y) + x, (-2 * v.x * v.y) + y);
 }
 
-int iterator(double x, double y, int t) {
+float iterator(double x, double y, int t) {
 	dvec2 v = dvec2(x, y);
 	int iteration = 0;
 	double xtemp = 0;
@@ -90,8 +90,10 @@ int iterator(double x, double y, int t) {
 
 	if (iteration == iterations)
 		return -1;
-	else
-		return iteration;
+	
+	float log_zn = log(float(v.x * v.x + v.y * v.y)) / 2.0;
+	float nu = log(log_zn / log(2.0)) / log(2.0);
+	return ((iteration + 1) - nu) / iterations;
 }
 
 vec4 getGradient(float pos) {
@@ -127,7 +129,6 @@ void main() {
 		(coords.x * _bounds.z * _bounds.w) + _bounds.x,
 		(coords.y * _bounds.w) + _bounds.y
 	);
-	int it = iterator(pos.x, pos.y, type);
-	float ivalue = it / float(iterations);
-	FragColor = (it == -1) ? inside_color : getGradient(log2(ivalue + 1));
+	float ivalue = iterator(pos.x, pos.y, type);
+	FragColor = (ivalue == -1) ? inside_color : getGradient(log2(ivalue + 1));
 };

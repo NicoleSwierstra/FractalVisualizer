@@ -6,6 +6,7 @@
 #include "vendor/glm/gtc/quaternion.hpp"
 #include "Gui.h"
 #include <chrono>
+#include <windows.h>
 
 long double mpx, mpy;
 long double lmpx, lmpy;
@@ -118,12 +119,10 @@ void key_callback_3d(GLFWwindow* window, int key, int scancode, int action, int 
 
 void swaptype(GLFWwindow* window) {
     if (is3d) {
-        std::cout << "3d\n";
         glfwSetKeyCallback(window, key_callback_3d);
         glfwSetCursorPosCallback(window, cursor_position_callback_3d);
     }
     else {
-        std::cout << "2d\n";
         glfwSetKeyCallback(window, key_callback_2d);
         glfwSetCursorPosCallback(window, cursor_position_callback_2d);
     }
@@ -131,13 +130,14 @@ void swaptype(GLFWwindow* window) {
 
 int main(void)
 {
+    FreeConsole();
     GLFWwindow* window;
 
     /* Initialize the library */
     if (!glfwInit())
         return -1;
 
-    glfwWindowHint(GLFW_SAMPLES, 4);
+    //glfwWindowHint(GLFW_SAMPLES, 4);
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(640, 480, "Manlebrot set viewer", NULL, NULL);
 

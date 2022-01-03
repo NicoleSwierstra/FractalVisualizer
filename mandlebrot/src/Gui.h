@@ -1,11 +1,11 @@
 #pragma once
 
-#include "vendor/ImGUI/imgui.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "vendor/glm/glm.hpp"
 #include "Shader.h"
 #include "vendor/ImGUI/imgui_color_gradient.h"
+#include "vendor/ImGUI/imgui.h"
 
 class GUI {
 public:
