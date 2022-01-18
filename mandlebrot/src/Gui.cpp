@@ -155,7 +155,19 @@ void GUI::render3d() {
 
     ImGui::Separator();
 
-    static bool shadows;
+    static bool shadows, water;
+    
+    ImGui::Checkbox("water", &water);
+    mb3d->SetIntUniforms("bwater", water);
+    if (water) {
+        static float water_scat = 2.0f, water_abs = 6.0f;
+        ImGui::SliderFloat("scattering", &water_scat, 0, 10.0f);
+        ImGui::SliderFloat("absorbtion", &water_abs,  0, 20.0f);
+
+        mb3d->SetFloatUniforms("water_scat", water_scat);
+        mb3d->SetFloatUniforms("water_abs", water_abs);
+    }
+
     ImGui::Checkbox("sun", &shadows);
     mb3d->SetIntUniforms("shadows", shadows);
     if (shadows) {

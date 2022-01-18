@@ -130,7 +130,7 @@ void swaptype(GLFWwindow* window) {
 
 int main(void)
 {
-    FreeConsole();
+    //FreeConsole();
     GLFWwindow* window;
 
     /* Initialize the library */
