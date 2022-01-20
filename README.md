@@ -2,7 +2,7 @@
 
 ![](FractalVisScreenshots/Fractal.png)
 
-Program for visualizing fractals
+A program for visualizing fractals. Includes 5 2d fractals and 2 3d fractals.
 
 ![](FractalVisScreenshots/Fractal2.png)
 
